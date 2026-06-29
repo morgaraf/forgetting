@@ -1,0 +1,8 @@
+__pycache__/
+test/
+runs*
+runs*/
+tmp/
+.vscode/
+data
+nohup.out
