@@ -1,0 +1,17 @@
+# Modelos entrenados (muy pesados para GitHub)
+saved_models/
+
+# Resultados generados
+resultados/
+
+# Caché de Python
+__pycache__/
+*.pyc
+
+# Archivos temporales
+.tmp.drivedownload/
+.tmp.driveupload/
+
+# Datos del dataset (se descargan automáticamente)
+data/
+runs/

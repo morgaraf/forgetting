@@ -75,3 +75,48 @@ La memoria EAM procesó el arreglo estructurado bajo tres umbrales de homeostasi
 - **$W = 10500$**: Alta capacidad de retención, estabilizándose en una **Entropía de 1.1593**.
 
 En los tres escenarios, la acumulación de energía colisionó elásticamente con los límites definidos, validando permanentemente la invulnerabilidad del sistema ante desbordamientos y confirmando la teoría termodinámica de la red neuronal.
+
+## 5. Experimento de Recall por Clase (Semana 5 - Corregido)
+
+Siguiendo las observaciones del Dr. Rafael Morales sobre los resultados preliminares, se implementaron las siguientes correcciones al diseño experimental:
+
+### 5.1 Corrección de la Distribución Temporal
+La distribución Gaussiana original producía "colas" estadísticas que permitían a las Clases 0 y 1 aparecer en los últimos pasos de inserción, contaminando el grupo de control. Se reemplazó por una **distribución por bloques limpios**: cada clase ocupa un segmento temporal exclusivo y contiguo, garantizando separación total entre los grupos Front-loaded y Back-loaded.
+
+### 5.2 Entrenamiento Profesional del Autoencoder
+Se incrementó el entrenamiento de 5 a **300 epochs máximos** con las siguientes mejoras:
+- **EarlyStopping** con `patience=15` monitoreando `val_Classifier_loss`
+- **Objetivos de convergencia**: `val_Classifier_accuracy > 0.98` y `val_Decoder_RMSE < 0.15`
+- **Persistencia en disco**: Los modelos entrenados se guardan automáticamente para evitar re-entrenamiento
+
+### 5.3 Diseño Experimental Paramétrico
+El experimento evalúa **3 × 4 = 12 configuraciones**:
+- **Resolución de cuantización ($M$)**: $M = 4$, $M = 8$, $M = 16$ niveles
+- **Capacidad de energía ($W$)**: $W = \infty$ (sin olvido), $W = 10{,}500$, $W = 7{,}000$, $W = 3{,}500$
+
+Para cada configuración, se mide el Recall por clase en **14 checkpoints** durante el proceso de llenado (cada 1,000 imágenes), generando curvas de comportamiento estilo Figura 7 del artículo de referencia.
+
+---
+
+## Inicio Rápido
+
+### Requisitos
+```bash
+pip install -r requirements.txt
+```
+
+### Ejecución
+```bash
+# Opción 1: Ambiente Anaconda (recomendado)
+conda create -n delfin python=3.10 -y
+conda activate delfin
+pip install -r requirements.txt
+python experimento_semana5.py
+
+# Opción 2: Servidor con GPU
+bash setup_servidor.sh
+conda activate delfin
+python experimento_semana5.py
+```
+
+Los resultados (gráficas PNG y tablas) se guardan automáticamente en la carpeta `resultados/`.
