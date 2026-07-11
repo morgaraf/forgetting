@@ -120,6 +120,7 @@ else:
     early_stop = EarlyStopping(
         monitor='val_Classifier_loss',
         patience=15,
+        mode='min',
         restore_best_weights=True,
         verbose=1
     )
