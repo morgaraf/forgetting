@@ -9,6 +9,7 @@
 
 import sys
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')  # Backend sin GUI (funciona en servidores sin pantalla)
@@ -217,13 +218,14 @@ for c in range(10):
     np.random.shuffle(class_indices)
     ordered_indices.extend(class_indices)
 
-ordered_labels = y_memory[ordered_indices]
-N_STEPS = len(ordered_indices)
+y_memory = y_memory[ordered_indices]
+features_memory_raw = features_memory_raw[ordered_indices]
+N_STEPS = len(y_memory)
 
 # Guardar gráfica de distribución temporal
 plt.figure(figsize=(12, 3))
-plt.scatter(range(N_STEPS), ordered_labels, alpha=0.3, s=1,
-            c=ordered_labels, cmap='tab10')
+plt.scatter(range(N_STEPS), y_memory, alpha=0.3, s=1,
+            c=y_memory, cmap='tab10')
 plt.title("Distribución por Bloques Limpios (0: Front → 9: Back)", fontsize=13)
 plt.xlabel("Paso de Inserción")
 plt.ylabel("Clase")
@@ -297,8 +299,6 @@ for M in valores_M:
     ).astype(int)
     features_rec_q = np.clip(features_rec_q, 0, M - 1)
 
-    ordered_features_q = features_mem_q[ordered_indices]
-
     resultados[M] = {}
 
     for idx_w, W in enumerate(valores_W):
@@ -309,7 +309,7 @@ for M in valores_M:
         recall_history = []
 
         for step in range(N_STEPS):
-            eam.register(ordered_features_q[step])
+            eam.register(features_mem_q[step])
 
             if (step + 1) in checkpoints:
                 print(f"      Checkpoint {step+1}/14000 - Evaluando recall...")
