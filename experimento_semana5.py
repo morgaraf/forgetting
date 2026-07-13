@@ -171,7 +171,7 @@ else:
         patience=15,
         mode='min',
         restore_best_weights=True,
-        verbose=1,
+        verbose=2,
     )
 
     print('   Objetivo: val_Classifier_accuracy > 0.98, val_RMSE < 0.15')
@@ -181,7 +181,7 @@ else:
         x_auto,
         (y_auto_cat, x_auto),
         epochs=300,
-        batch_size=32,
+        batch_size=128,
         validation_split=0.1,
         callbacks=[early_stop],
         verbose=1,
