@@ -47,6 +47,7 @@ CLASS_NAMES = [
     'Bolsa',
     'Bota',
 ]
+domain = 256
 
 # Directorios para guardar modelos, features y resultados
 SAVE_DIR = os.path.join(PROJECT_DIR, 'saved_models')
@@ -140,13 +141,13 @@ if os.path.exists(ENCODER_PATH) and os.path.exists(CLASSIFIER_PATH):
 else:
     print('\n2. Modelo NO encontrado. Entrenando desde cero (300 epochs máx.)...')
 
-    input_layer, encoder_output = neural_net.get_encoder()
+    input_layer, encoder_output = neural_net.get_encoder(domain)
     encoder = Model(inputs=input_layer, outputs=encoder_output, name='VGG_Encoder')
 
-    decoder_input, decoder_output = neural_net.get_decoder()
+    decoder_input, decoder_output = neural_net.get_decoder(domain)
     decoder = Model(inputs=decoder_input, outputs=decoder_output, name='VGG_Decoder')
 
-    classifier_input, classifier_output = neural_net.get_classifier()
+    classifier_input, classifier_output = neural_net.get_classifier(domain)
     classifier = Model(
         inputs=classifier_input, outputs=classifier_output, name='Classifier'
     )
@@ -168,7 +169,7 @@ else:
     # EarlyStopping con patience=15 como recomienda el Dr. Rafael
     early_stop = EarlyStopping(
         monitor='val_Classifier_loss',
-        patience=15,
+        patience=20,
         mode='min',
         restore_best_weights=True,
         verbose=2,
@@ -181,7 +182,7 @@ else:
         x_auto,
         (y_auto_cat, x_auto),
         epochs=300,
-        batch_size=128,
+        batch_size=64,
         validation_split=0.1,
         callbacks=[early_stop],
         verbose=1,
@@ -329,7 +330,7 @@ valores_W = [None, 10500, 7000, 3500]
 etiquetas_W = ['W = ∞ (sin olvido)', 'W = 10,500', 'W = 7,000', 'W = 3,500']
 colores_W = ['#264653', '#2a9d8f', '#e9c46a', '#e63946']
 
-checkpoints = list(range(1000, 14001, 1000))
+checkpoints = list(range(1400, 14001, 1400))
 
 resultados = {}
 
